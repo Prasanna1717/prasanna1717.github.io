@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>Harvard Business School logo</title>
+  <path fill="#a51c30" d="M32 3 54 11v18c0 15-9 26-22 32C19 55 10 44 10 29V11L32 3Z"/>
+  <path fill="#fff" d="M22 20h6v8h8v-8h6v24h-6v-9h-8v9h-6V20Z"/>
+  <path fill="#fff" d="M17 48h30v3H17z" opacity=".8"/>
+</svg>
