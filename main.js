@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Prasanna Vijay. All rights reserved.
+
 document.querySelectorAll('.copy-button').forEach(function (button) {
   button.addEventListener('click', async function () {
     var email = button.dataset.email;
@@ -255,6 +257,16 @@ var revealObserver = new IntersectionObserver(function (entries, observer) {
 }, { threshold: .12 });
 revealItems.forEach(function (item) { revealObserver.observe(item); });
 
+var lineArtObserver = new IntersectionObserver(function (entries) {
+  entries.forEach(function (entry) {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.remove('line-art-active');
+    window.requestAnimationFrame(function () { entry.target.classList.add('line-art-active'); });
+    window.setTimeout(function () { entry.target.classList.remove('line-art-active'); }, 1450);
+  });
+}, { threshold: .35 });
+document.querySelectorAll('.section-signal').forEach(function (signal) { lineArtObserver.observe(signal); });
+
 var scrollFrame;
 window.addEventListener('scroll', function () {
   if (scrollFrame) return;
@@ -263,3 +275,80 @@ window.addEventListener('scroll', function () {
     scrollFrame = null;
   });
 }, { passive: true });
+
+/* ═══ MOTION GRAPHICS: 3D Card Tilt ═══ */
+var tiltCards = document.querySelectorAll('.project-card, .competitive-card, .leadership-card, .achievement-card, .certification-card');
+tiltCards.forEach(function (card) {
+  card.addEventListener('mousemove', function (e) {
+    var rect = card.getBoundingClientRect();
+    var x = e.clientX - rect.left;
+    var y = e.clientY - rect.top;
+    var centerX = rect.width / 2;
+    var centerY = rect.height / 2;
+    var rotateX = ((y - centerY) / centerY) * -6;
+    var rotateY = ((x - centerX) / centerX) * 6;
+    card.style.transform = 'perspective(600px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateY(-5px)';
+  });
+  card.addEventListener('mouseleave', function () {
+    card.style.transform = '';
+  });
+});
+
+/* ═══ MOTION GRAPHICS: Parallax Signal Art ═══ */
+var signalArt = document.querySelector('.signal-art');
+if (signalArt) {
+  var signalParallaxFrame;
+  window.addEventListener('scroll', function () {
+    if (signalParallaxFrame) return;
+    signalParallaxFrame = window.requestAnimationFrame(function () {
+      var rect = signalArt.getBoundingClientRect();
+      var viewportCenter = window.innerHeight / 2;
+      var elementCenter = rect.top + rect.height / 2;
+      var offset = (elementCenter - viewportCenter) * 0.06;
+      signalArt.style.transform = 'rotate(3deg) translateY(' + offset + 'px)';
+      signalParallaxFrame = null;
+    });
+  }, { passive: true });
+}
+
+/* ═══ MOTION GRAPHICS: Section Heading Reveal ═══ */
+var headings = document.querySelectorAll('.section-heading');
+headings.forEach(function (heading) {
+  heading.classList.add('reveal');
+});
+var headingObserver = new IntersectionObserver(function (entries, observer) {
+  entries.forEach(function (entry) {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('is-visible');
+    observer.unobserve(entry.target);
+  });
+}, { threshold: .15 });
+headings.forEach(function (heading) { headingObserver.observe(heading); });
+
+/* ═══ MOTION GRAPHICS: Magnetic Cursor on Buttons ═══ */
+var magneticElements = document.querySelectorAll('.arrow-link, .nav-resume, .project-arrow, .circle-link');
+magneticElements.forEach(function (el) {
+  el.addEventListener('mousemove', function (e) {
+    var rect = el.getBoundingClientRect();
+    var x = e.clientX - rect.left - rect.width / 2;
+    var y = e.clientY - rect.top - rect.height / 2;
+    el.style.transform = 'translate(' + (x * 0.15) + 'px, ' + (y * 0.15) + 'px) scale(1.04)';
+  });
+  el.addEventListener('mouseleave', function () {
+    el.style.transform = '';
+  });
+});
+
+/* ═══ MOTION GRAPHICS: Staggered Skill Group Reveal ═══ */
+var skillGroups = document.querySelectorAll('.skill-group');
+skillGroups.forEach(function (group, index) {
+  group.classList.add('reveal', 'reveal-delay-' + (index % 8));
+});
+var skillObserver = new IntersectionObserver(function (entries, observer) {
+  entries.forEach(function (entry) {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('is-visible');
+    observer.unobserve(entry.target);
+  });
+}, { threshold: .2 });
+skillGroups.forEach(function (group) { skillObserver.observe(group); });
